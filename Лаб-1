@@ -24,13 +24,12 @@ with open("text.txt","r") as file: #открываем файл
             buffer = file.read(buffer_len) #читаем очередной блок
         if len(work_buffer) > 0:
             #print(work_buffer)
-            f_b = True
+
             print(work_buffer)
             r = bin(int(work_buffer))[2:]
             print("Прямой, обратный и дополнительный код для", work_buffer, " --->", r)
-        else:
-            print('нет чисел удовлет. условию')
-            break
         work_buffer = ''
 
         buffer = file.read(buffer_len) # читаем очередной блок
+    else:
+        print('файл пустой или нет чисел удовлет. условию')
