@@ -1,46 +1,46 @@
 import numpy as np
 
-def factorial(n):
-    """Вычисляет факториал числа n."""
-    result = 1
-    for i in range(1, n + 1):
-        result *= i
-    return result
+def determinant_recursive(matrix):
+    # Рекурсивно вычисляем определитель матрицы
+    if matrix.shape == (1, 1):
+        return matrix[0, 0]
+    else:
+        det = 0
+        for i in range(matrix.shape[0]):
+            submatrix = np.delete(matrix, i, axis=0)
+            submatrix = np.delete(submatrix, 0, axis=1)
+            det += ((-1) ** i) * matrix[i, 0] * determinant_recursive(submatrix)
+        return det
 
-def alternating_series(x, n):
-    """Вычисляет значение знакопеременного ряда для заданных x и n."""
-    return (-1)**(n - 1) * (x**(n - 1)) / factorial(n - 1)
-
-def determinant_and_sum(k, t):
-    """Вычисляет определитель матрицы и сумму знакопеременного ряда с заданной точностью."""
-    
-    # Генерация матрицы размера k x k со значениями от -1 до 1
-    matrix = np.random.uniform(-1, 1, size=(k, k))
-    
-    # Вычисление определителя матрицы
-    det = np.linalg.det(matrix)
-    
-    # Инициализация суммы и текущего слагаемого
-    series_sum = 0
-    current_term = alternating_series(det, 1)
-    
-    # Итеративное вычисление суммы с учетом точности t
+def calculate_sum(x, k, t):
+    sum_value = 0.0
     n = 1
-    while abs(current_term) >= 10**(-t):
-        series_sum += current_term
+    term = (-1) ** (n - 1) * determinant_recursive(x ** (n - 1)) / np.math.factorial(n - 1)
+
+    while abs(term) >= 10 ** -t:
+        sum_value += term
         n += 1
-        current_term = alternating_series(det, n)
-    
-    return det, series_sum
+        term = (-1) ** (n - 1) * determinant_recursive(x ** (n - 1)) / np.math.factorial(n - 1)
 
-# Ввод значения k (размер матрицы) и t (точность)
-k = int(input("Введите размер матрицы k: "))
-t = int(input("Введите точность t (количество знаков после запятой): "))
+    return round(sum_value, t)
 
-# Вычисление определителя матрицы и суммы ряда
-det, series_sum = determinant_and_sum(k, t)
+def main():
+    # Ввод параметров
+    k = int(input("Введите ранг матрицы k: "))
+    t = int(input("Введите точность t: "))
 
-# Вывод результатов
-print(f"Определитель матрицы:\n{det}")
-print(f"Сумма знакопеременного ряда с точностью {t} знаков после запятой:\n{series_sum:.{t}f}")
+    # Генерация матрицы
+    x = np.random.uniform(-1, 1, (k, k))
+
+    # Вычисление и вывод определителя матрицы
+    det_value = determinant_recursive(x)
+    print(f"Определитель матрицы x:\n{det_value}")
+
+    # Вычисление и вывод суммы
+    sum_value = calculate_sum(x, k, t)
+    print(f"Сумма знакопеременного ряда: {sum_value}")
+
+if __name__ == "__main__":
+    main()
+
 
