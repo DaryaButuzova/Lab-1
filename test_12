@@ -1,0 +1,29 @@
+import numpy as np
+import random
+import math
+from decimal import Decimal
+
+
+k = random.randint(0, 100)  # Ранг матрицы X0
+X0 = np.random.rand(k, k)  # Случайная матрица X0
+print("Исходна матрица: ")
+print(X0)
+X = np.linalg.det(X0)  # Определитель матрицы X0
+
+print("Определитель матрицы - X = ", X)
+result = 0.0
+sign = -1
+# Точность вычислений
+t = int(input("Введите количество знаков после запятой "))
+if X >= 0:
+    result = X * sign
+
+n = 0
+term = 1.0
+while Decimal(str(result)).as_tuple().exponent*(-1) > t:
+    n += 1
+    sign *= -1
+    term = np.abs(X**(2*n-1)) / math.factorial(2*n-1)
+    result += sign * term
+
+print("Сумма знакопеременного ряда:", result)
